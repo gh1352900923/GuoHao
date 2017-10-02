@@ -17,19 +17,16 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Четырехзначное число назовем счастливым, если сумма первых двух ее цифр равна сумме двух последних.
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
-fun isNumberHappy(number: Int): Boolean = {
-    val count=0
-    while (Math.abs(number)%10>0 || number/10!=0){
-        count++
-        number=number/10
-    }
-    if (count>1){
-        val x1=number%pow(10,count)/pow(10,count-1)
-        val x2=number%pow(10,count-1)/pow(10,count-2)
-        val y1=number%100/10
-        val y2=number%10
-        if (xi+x2==y1+y2) return true
-    }
+fun isNumberHappy(number: Int): Boolean  {
+    val x1=number/1000
+    val x2=(number%1000)/100
+    val x3=(number%100)/10
+    val x4=number%10
+    if (x1+x2==x3+x4) {
+        return true
+    }else
+        return false
+
 }
 
 /**
@@ -40,8 +37,13 @@ fun isNumberHappy(number: Int): Boolean = {
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
-    if (x1==x2||y1==y2)return true
-    if (x2-x1==y2-y1)return true
+    if (x1==x2||y1==y2){
+        return true
+    }else
+    if (x2-x1==y2-y1){
+        return true
+    }else
+        return false
 }
 
 

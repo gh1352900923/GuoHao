@@ -2,6 +2,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
 
 /**
  * Пример
@@ -54,17 +55,20 @@ fun timeForHalfWay(t1: Double, v1: Double,
     val x1 = t1 * v1
     val x2 = t2 * v2
     val x3 = t3 * v3
-    if ( X < ( x1 ) ) {
+    if ( X <  x1  ) {
         val T = X /v1
-    }
+        println(T)
+    }else
     if ( X > ( x1 + x2) ) {
         val T = t1 + t2 + ( X - x1 - x2 ) / v3
+        println(T)
     }
     else {
         val T = t1 + ( X - x1 ) / v2
+        println(T)
     }
-    return T
 
+    return 0.0
 }
 
 /**
@@ -122,8 +126,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     if (cos==0.0) return 1
     if (cos>0.0&&cos<1.0) return 0
     if (cos<0.0&&cos>-1.0) return 2
-    return -1}
-
+    return -1
 }
 
 /**
@@ -134,10 +137,21 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int ={
-    if (c>b||d<a) return -1
-    if (a<=c && b>=d ) return d-c
-    if  (c <= a && d >= b) return b-a
-    if (a<=c<=b<=d) return b-c
-    if (c<=a<=d<=b) return d-a
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    if (c>b||d<a) {
+        return -1
+    }else
+    if (a<=c && b>=d ) {
+        return d - c
+    }else
+    if  (c <= a && d >= b) {
+        return b - a
+    }else
+    if (a<=c && c<=b && b<=d) {
+        return b - c
+    }else
+    if (c<=a&&a<=d && d<=b) {
+        return d - a
+    }
+    return 0
 }
