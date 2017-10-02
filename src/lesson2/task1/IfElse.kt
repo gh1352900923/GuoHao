@@ -34,10 +34,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String {
-    if(age>0 || age<200){
-        return (age+" лет");
-    }
-    else return 0;
+    if ((age in 5..20)||(age in 105..120)) return "$age лет"
+    if (age%10==1) return "$age год"
+    if (age%10>=5) return "$age лет"
+    return "$age года"
 }
 
 /**
@@ -78,7 +78,11 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int = TODO()
+                       rookX2: Int, rookY2: Int): Int {
+    if ((kingX==rookX1&&kingY!=rookY1)||(kingY==rookY1&&kingX!=rookX1)) return 1
+    else if ((kingX==rookX2&&kingY!=rookY2)||(kingY==rookY2&&kingX!=rookX2)) return 2
+    else if((kingX==rookX1&&kingX==rookX2||(kingX==rookX1&&kingY==rookY2)||(kingX==rookX2&&kingY==rookY1)||(kingY==rookY1&&kingY==rookY2))) return 3
+    else return 0}
 
 /**
  * Простая
@@ -102,7 +106,25 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    val m = Math.max(Math.max(a,b),c)
+    val c1: Double
+    val c2: Double
+    if (m == a){
+        c1=b
+        c2=c}
+    else if (m==b){
+    c1=a
+    c2=c}
+    else{c1=a
+        c2=b }
+    val cos = (sqr(c1) + sqr(c2) - sqr(m))/(2*c1*c2)
+    if (cos==0.0) return 1
+    if (cos>0.0&&cos<1.0) return 0
+    if (cos<0.0&&cos>-1.0) return 2
+    return -1}
+
+}
 
 /**
  * Средняя
@@ -112,4 +134,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int ={
+    if (c>b||d<a) return -1
+    if (a<=c && b>=d ) return d-c
+    if  (c <= a && d >= b) return b-a
+    if (a<=c<=b<=d) return b-c
+    if (c<=a<=d<=b) return d-a
+}

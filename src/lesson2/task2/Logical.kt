@@ -17,7 +17,20 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Четырехзначное число назовем счастливым, если сумма первых двух ее цифр равна сумме двух последних.
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
-fun isNumberHappy(number: Int): Boolean = TODO()
+fun isNumberHappy(number: Int): Boolean = {
+    val count=0
+    while (Math.abs(number)%10>0 || number/10!=0){
+        count++
+        number=number/10
+    }
+    if (count>1){
+        val x1=number%pow(10,count)/pow(10,count-1)
+        val x2=number%pow(10,count-1)/pow(10,count-2)
+        val y1=number%100/10
+        val y2=number%10
+        if (xi+x2==y1+y2) return true
+    }
+}
 
 /**
  * Простая
@@ -26,7 +39,11 @@ fun isNumberHappy(number: Int): Boolean = TODO()
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = TODO()
+fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
+    if (x1==x2||y1==y2)return true
+    if (x2-x1==y2-y1)return true
+}
+
 
 /**
  * Средняя
@@ -36,7 +53,10 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = TODO()
  * Вернуть true, если утверждение верно
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
-                 x2: Double, y2: Double, r2: Double): Boolean = TODO()
+                 x2: Double, y2: Double, r2: Double): Boolean {
+    val d=Math.sqrt(sqr(x1-x2)+ sqr(y1-y2))
+    if (d+r1<=r2) {return true}else{return false}
+}
 
 /**
  * Средняя
