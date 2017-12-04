@@ -51,25 +51,15 @@ fun ageDescription(age: Int): String {
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
                    t3: Double, v3: Double): Double {
-    val X = ( t1 * v1 + t2 * v2 + t3 * v3 ) / 2
-    val x1 = t1 * v1
-    val x2 = t2 * v2
-    val x3 = t3 * v3
-    if ( X <  x1  ) {
-        val T = X /v1
-        println(T)
-    }else
-    if ( X > ( x1 + x2) ) {
-        val T = t1 + t2 + ( X - x1 - x2 ) / v3
-        println(T)
-    }
-    else {
-        val T = t1 + ( X - x1 ) / v2
-        println(T)
-    }
+     val halfWay = (t1 * v1 + t2 * v2 + t3 * v3) / 2.0
+     return when {
+         halfWay <= t1 * v1 -> halfWay / v1
+         halfWay <= t1 * v1 + t2 * v2 -> (halfWay - t1 * v1) / v2 + t1
+         halfWay <= t1 * v1 + t2 * v2 + t3 * v3 -> (halfWay - t1 * v1 - t2 * v2) / v3 + t1 + t2
+         else -> 0.0
+     }
+ }
 
-    return 0.0
-}
 
 /**
  * Простая
@@ -82,11 +72,14 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int {
-    if ((kingX==rookX1&&kingY!=rookY1)||(kingY==rookY1&&kingX!=rookX1)) return 1
-    else if ((kingX==rookX2&&kingY!=rookY2)||(kingY==rookY2&&kingX!=rookX2)) return 2
-    else if((kingX==rookX1&&kingX==rookX2||(kingX==rookX1&&kingY==rookY2)||(kingX==rookX2&&kingY==rookY1)||(kingY==rookY1&&kingY==rookY2))) return 3
-    else return 0}
+                       rookX2: Int, rookY2: Int): Int =
+        when{
+             ((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2)) -> 3
+             (kingX == rookX1) || (kingY == rookY1) -> 1
+             (kingX == rookX2) || (kingY == rookY2) -> 2
+             else -> 0
+         }
+
 
 /**
  * Простая
@@ -100,7 +93,14 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
  */
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
-                          bishopX: Int, bishopY: Int): Int = TODO()
+                          bishopX: Int, bishopY: Int): Int =
+        when{
+             ((kingX == rookX) || (kingY == rookY)) && (Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY)) -> 3
+             (kingX == rookX) || (kingY == rookY) -> 1
+            Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY) -> 2
+             else -> 0
+         }
+
 
 /**
  * Простая
