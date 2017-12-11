@@ -66,7 +66,19 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String  {
+     val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня",
+             "июля", "августа", "сентября", "октября", "ноября", "декабря")
+     val parts = str.split(" ")
+     try {
+         if ((parts.count() != 3) || (parts[0].toInt() !in 1..31) || (parts[2].toInt() < 0)
+                 || (parts[1] !in months)) return ""
+     }
+     catch(e: NumberFormatException) {return ""}
+
+     return String.format("%02d.%02d.%d", parts[0].toInt(),
+                 months.indexOf(parts[1]) + 1, parts[2].toInt())
+ }
 
 /**
  * Средняя
@@ -75,7 +87,17 @@ fun dateStrToDigit(str: String): String = TODO()
  * Перевести её в строковый формат вида "15 июля 2016".
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+     val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня",
+         "июля", "августа", "сентября", "октября", "ноября", "декабря")
+     val parts = digital.split(".")
+     try {
+         if (parts.count() != 3 || (parts[0].toInt() !in 1..31)
+                 || (parts[1].toInt() !in 1..12) || (parts[2].toInt() < 0)) return ""
+     }
+     catch(e: NumberFormatException) {return ""}
+     return String.format("%d %s %s", parts[0].toInt(), months[parts[1].toInt() - 1], parts[2])
+ }
 
 /**
  * Средняя
@@ -89,7 +111,34 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    if (phone.isEmpty()) return ""
+    fun construct(result : StringBuilder): Boolean{
+        for (symbol in phone)
+            when{
+                (symbol in '0'..'9') -> result.append(symbol.toString())
+                (symbol == ')') || (symbol == '(')|| (symbol == '-') || (symbol == '+')|| (symbol == ' ') -> null
+                else -> return true
+            }
+        return false
+    }
+    when{
+        phone.first() in '0'..'9' -> {
+             val result = StringBuilder("")
+             val crash = construct(result)
+             if (crash) return "" else return result.toString()
+         }
+
+        phone.first() == '+' -> {
+             val result = StringBuilder("+")
+             val crash = construct(result)
+             if (crash) return "" else return result.toString()
+         }
+     }
+     return ""
+
+}
+
 
 /**
  * Средняя
@@ -101,7 +150,31 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    if(jumps.isEmpty()) return -1
+    val allowedSymbols = listOf('%', '-')
+    val parts = jumps.split(" ")
+    val buf = StringBuilder("")
+    var bestScore = -1
+    var isItNumber = false
+    for(part in parts){
+        for (symbol in part){
+            when{
+                symbol in '0'..'9' -> {
+                    isItNumber=true
+                    buf.append(symbol.toString())
+                }
+                symbol in allowedSymbols -> if (isItNumber) return -1
+                else return -1
+            }
+        }
+        if ((isItNumber)&&(buf.toString().toInt() > bestScore))
+            bestScore=buf.toString().toInt()
+        buf.delete(0,buf.length)
+        isItNumber= false
+    }
+    return bestScore
+}
 
 /**
  * Сложная
@@ -113,7 +186,37 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    if (jumps.isEmpty()) return -1
+    val allowedSymbols = listOf('%', '-','+')
+    val parts = jumps.split(" ")
+    var buf = 0
+    var bestScore = -1
+    var isNumber = true
+    var counted = false
+    for(part in parts){
+        when{
+            isNumber->{
+                buf = 0
+                try {
+                    buf+= part.toInt()
+                }
+                catch(e: NumberFormatException){return -1}
+            }
+            !isNumber -> {
+                 counted = false
+                 for (symbol in part)
+                     if(symbol == '+') counted = true
+                     else if (symbol !in allowedSymbols) return -1
+             }
+         }
+         if (counted && (buf > bestScore) &&
+            (!isNumber)) bestScore = buf
+         isNumber = !isNumber
+     }
+     return bestScore
+ }
+
 
 /**
  * Сложная
@@ -124,7 +227,41 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    if (expression.isEmpty()) throw IllegalArgumentException()
+     val format = Regex("""^([0-9]+)(\s+(\+|-)\s+([0-9]+))*$""")
+     if(!(expression.matches(format))) throw IllegalArgumentException()
+     val parts = expression.split(" ")
+     var buf = 0
+     var result = 0
+     var isNumber = true
+     var plus = true
+     for (part in parts) {
+         when {
+             isNumber -> buf += part.toInt()
+             !isNumber -> {
+                 when {
+                     part == "+" -> plus = true
+                     part == "-" -> plus = false
+                 }
+             }
+         }
+         if (isNumber)
+             when {
+                 plus -> {
+                     result += buf.toString().toInt()
+                     buf = 0
+                 }
+                 else -> {
+                     result -= buf.toString().toInt()
+                     buf = 0
+                 }
+             }
+         isNumber = !isNumber
+     }
+     return result
+ }
+
 
 /**
  * Сложная
@@ -135,7 +272,25 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+     if (str.isEmpty()) return -1
+     val parts = str.toLowerCase().split(" ")
+     var result = 0
+     var i = 0
+     var wordFound = false
+     while(i < parts.count() - 1){
+         if (parts[i].toLowerCase() == parts[i + 1].toLowerCase()) {
+             wordFound = true
+             break
+         }
+         ++i
+     }
+     if (wordFound) {
+         for (j in 0 until i) result += parts[j].length + 1
+         return result
+     }
+     else return -1
+ }
 
 /**
  * Сложная
@@ -148,7 +303,38 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    if (description.isEmpty()) return ""
+    val parts = description.split(" ")
+    val productBuf = StringBuilder("")
+    val resultProduct = StringBuilder("")
+    var priceBuf = 0.0
+    var bestPrice = 0.0
+    var isNumber = false
+    for (part in parts){
+        when {
+             !isNumber -> {
+                     productBuf.delete(0, productBuf.length)
+                     productBuf.append(part)
+             }
+             isNumber -> {
+                 if ((part[part.length - 1] != ';') && (part != parts[parts.count() - 1])
+                         || (part[part.length - 1] == '.') || (part[0] == '.')) return ""
+                 try {
+                     priceBuf = Regex(""";""").replace(part, "").toDouble()
+                 }
+                 catch (e: NumberFormatException){return ""}
+            }
+         }
+         if ((bestPrice <= priceBuf) && (isNumber)) {
+             bestPrice = priceBuf
+             resultProduct.delete(0, resultProduct.length)
+             resultProduct.append(productBuf)
+         }
+         isNumber = !isNumber
+    }
+    return resultProduct.toString()
+}
 
 /**
  * Сложная
